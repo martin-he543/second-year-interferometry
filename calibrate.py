@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import sys
-import read_data_results3 as rd
+import read_data_results as rd
 import numpy as np
 import scipy as sp
 import matplotlib.pyplot as plt

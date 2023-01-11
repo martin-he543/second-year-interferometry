@@ -8,7 +8,7 @@
 import sys
 import numpy as np
 import pylab as pl
-import read_data_results3 as rd
+import read_data_results as rd
 
 #Step 1 get the data and the x position
 file='%s'%(sys.argv[1]) #this is the data

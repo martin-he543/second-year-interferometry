@@ -5,6 +5,17 @@ import numpy.random as npr
 import scipy as sp
 import pylab as pl
 import scipy.fftpack as spf
+import matplotlib.font_manager as fnt
+
+titleFont =     {'fontname': 'C059', 'size': 13}
+axesFont =      {'fontname': 'C059', 'size': 9}
+ticksFont =     {'fontname': 'SF Mono', 'size': 7}
+errorStyle =    {'mew': 1, 'ms': 3, 'capsize': 3, 'color': 'blue', 'ls': ''}
+pointStyle =    {'mew': 1, 'ms': 3, 'color': 'blue'}
+lineStyle =     {'linewidth': 0.5}
+lineStyleBold = {'linewidth': 1}
+histStyle =     {'facecolor': 'green', 'alpha': 0.5, 'edgecolor': 'black'}
+font = fnt.FontProperties(family='C059', weight='bold', style='normal', size=8)
 
 def add_line(x,y,wl,amp,width,nstep):
     """
@@ -40,10 +51,6 @@ def calc_amp(nsigma,nsamp):
         yy[i]=size
     return yy
   
-
-
-
-
 # Now set up the experiment that you want to do
 
 # Na lines
@@ -107,9 +114,9 @@ y=add_line(x,y,570e-9,1.0,0.2e-9,400)
 
 pl.figure(1)
 pl.plot(x,y,'bo-')
-pl.xlabel("Distance from null point (m)")
-pl.ylabel("Amplitude")
-
+pl.xlabel("Distance from null point (m)", **axesFont)
+pl.ylabel("Amplitude", **axesFont)
+pl.xticks(**ticksFont); pl.yticks(**ticksFont)
 
 
 
@@ -124,9 +131,9 @@ yf=spf.fftshift(yf)
 
 pl.figure(2)
 pl.plot(xf,np.abs(yf))
-pl.xlabel("Oscillations per sample")
-pl.ylabel("Amplitude")
-
+pl.xlabel("Oscillations per sample", **axesFont)
+pl.ylabel("Amplitude", **axesFont)
+pl.xticks(**ticksFont); pl.yticks(**ticksFont)
 
 # Now try to reconstruct the original wavelength spectrum
 # only take the positive part of the FT
@@ -139,8 +146,7 @@ repx=dsamp/xx
 
 pl.figure(3)
 pl.plot(repx,abs(yf[int(len(xf)/2+1):len(xf)]))
-pl.xlabel("Wavelength (m)")
-pl.ylabel("Amplitude")
-
-
+pl.xlabel("Wavelength (m)", **axesFont)
+pl.ylabel("Amplitude", **axesFont)
+pl.xticks(**ticksFont); pl.yticks(**ticksFont)
 pl.show()
