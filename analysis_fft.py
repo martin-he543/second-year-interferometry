@@ -62,7 +62,7 @@ def fit_func(x,a,mu,sig):
     return gaus
 
 #Step 1 get the data and the x position
-data = np.loadtxt('Output_data.txt', delimiter=' ')
+data = np.loadtxt('Output_data_task_11_actual.txt', delimiter=' ')
 x = data[6000:12000,5]
 x2 =  x*(532e-9/(2*7281.144158000063))-0.000205
 y1 = data[6000:12000,1]
