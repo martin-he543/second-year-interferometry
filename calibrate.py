@@ -28,7 +28,7 @@ if automation:
     for file in range(len(file_list)):
         try:
             #Step 1 get the data and the x position
-            file = "data/" + file_list[file]
+            file = '%s'%(sys.argv[1])
             results = rd.read_data3(file)
             #print(results[0])
             #carefull!!! change for the correct detector by swapping onew and zero here
@@ -109,7 +109,7 @@ if automation:
             pass
 else:
     try:
-        file='%s'%(sys.argv[1]) #this is the data
+        file = '%s'%(sys.argv[1])
         results = rd.read_data3(file)
         #print(results[0])
         #carefull!!! change for the correct detector by swapping onew and zero here
@@ -147,6 +147,12 @@ else:
             diff.append(np.abs(crossing_pos[i+1]-crossing_pos[i]))
         diff=np.array(diff)
 
+        print("The mean difference between crossing points is",diff.mean(),"+/-",diff.std()/np.sqrt(len(diff)))
+        print("and the standard deviation between crossing points is ",diff.std())
+        value_mean = diff.mean()
+        std_mean = diff.std()/np.sqrt(len(diff))
+        std_crossing = diff.std()
+        
         plt.figure("Crossing Points")
         plt.plot(x, y1, 'x-', **lineStyle, **pointStyle)
         plt.plot(crossing_pos, 0*np.array(crossing_pos), 'ko', **lineStyle, **pointStyle)
@@ -156,6 +162,9 @@ else:
         plt.yticks(**ticksFont)
         plt.ticklabel_format(useMathText=True)
         plt.title("Crossing Points", **titleFont)
+        plt.savefig(file + "_crossing_points_[mean_"+ str(value_mean) + "±" + str(std_mean) + "_std_c_" + str(std_crossing) + "].png", dpi=500)
+        plt.cla()
+        plt.clf()
 
         plt.figure("Distribution of Distance Crossing Points")
         plt.subplot(2,1,1)
@@ -174,9 +183,8 @@ else:
         plt.xticks(**ticksFont)
         plt.yticks(**ticksFont)
         plt.ticklabel_format(useMathText=True)
-
-        print("The mean difference between crossing points is",diff.mean(),"+/-",diff.std()/np.sqrt(len(diff)))
-        print("and the standard deviation between crossing points is ",diff.std())
-        plt.show()
+        plt.savefig(file + "_distribution_[mean_"+ str(value_mean) + "±" + str(std_mean) + "_std_c_" + str(std_crossing) + "].png", dpi=500)
+        plt.cla()
+        plt.clf()
     except Exception:
         pass
