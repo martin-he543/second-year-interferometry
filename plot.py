@@ -62,7 +62,7 @@ else:
     x=np.array(results[5])
 
     pl.figure("Detector 1")
-    pl.plot(x,y1,'o-')
+    pl.plot(x,y1,'o-', **pointStyle)
     pl.xlabel("Position ($\mu$steps)", **axesFont)
     pl.ylabel("Signal 1", **axesFont)
     pl.ticklabel_format(useMathText=True)
@@ -72,7 +72,7 @@ else:
     #print("Detector 1 Saved: ",file)
 
     pl.figure("Detector 2")
-    pl.plot(x,y2,'o-')
+    pl.plot(x,y2,'o-', **pointStyle)
     pl.xlabel("Position ($\mu$steps)", **axesFont)
     pl.ylabel("Signal 2", **axesFont)
     pl.ticklabel_format(useMathText=True)
