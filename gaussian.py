@@ -17,7 +17,8 @@ histStyle =     {'facecolor': 'green', 'alpha': 0.5, 'edgecolor': 'black'}
 font = fnt.FontProperties(family='C059', weight='bold', style='normal', size=8)
 def gaussian(x, A, mu, sd, D):  return A * np.exp((-(x-mu)**2)/(2*(sd**2))) + D
 
-file = '%s'%(sys.argv[1])
+file = "data/Task_9_orange_7500.txt"
+#file = '%s'%(sys.argv[1])
 results = rd.read_data3(file)
 y1 = np.array(results[0])
 y2 = np.array(results[1])
