@@ -10,7 +10,16 @@ from scipy import signal
 import scipy.fftpack as spf
 import scipy.signal as sps
 import scipy.interpolate as spi
-
+import matplotlib.font_manager as fnt
+titleFont =     {'fontname': 'C059', 'size': 13}
+axesFont =      {'fontname': 'C059', 'size': 9}
+ticksFont =     {'fontname': 'SF Mono', 'size': 7}
+errorStyle =    {'mew': 1, 'ms': 3, 'capsize': 3, 'color': 'blue', 'ls': ''}
+pointStyle =    {'mew': 1, 'ms': 3, 'color': 'blue'}
+lineStyle =     {'linewidth': 0.5}
+lineStyleBold = {'linewidth': 1}
+histStyle =     {'facecolor': 'green', 'alpha': 0.5, 'edgecolor': 'black'}
+font = fnt.FontProperties(family='C059', weight='bold', style='normal', size=8)
 
 #Step 1 get the data and the x position
 file='%s'%(sys.argv[1]) #this is the data
@@ -59,12 +68,17 @@ for i in range(len(y1)-1):
         crossing_pos.append(x[i]+extra)
 
 plt.figure("Find the crossing points")
-plt.plot(x, y1, 'x-')
+plt.title("Crossing Point Locations",**titleFont)
+plt.plot(x, y1, 'x-', **lineStyle)
 plt.plot(crossing_pos, 0*np.array(crossing_pos), 'ko')
+plt.xlabel("Position ($\mu$steps)",**axesFont)
+plt.ylabel("Arbitrary Units",**axesFont)
+plt.xticks(**ticksFont)
+plt.yticks(**ticksFont)
+plt.ticklabel_format(useMathText=True)  
 #plt.show()
 
 #step 3 shift the points
-
 k = 0
 x_corr_array = [0]
 last_pt = 0
@@ -82,10 +96,8 @@ for period in range(len(crossing_pos)//2-1):
 x_corr_array = x_corr_array[1:]
 
 #step 4 create a uniform data set 
-
 ## if we want to keep with only the first branch use
 y2 = y1
-
 #Cubic Spline part
 xr = x_corr_array
 N = 1000000 # these are the number of points that you will resample - try changing this and look how well the resampling follows the data.
@@ -94,16 +106,19 @@ y = y2[:len(x_corr_array)]
 cs = spi.CubicSpline(xr, y)
 
 plt.figure("Correct the points and resample  the points")
-plt.title('0-crossing - fitted wavelength after CubicSpline \n%s'%file)
+plt.title('Correct and Resample Points\nZero-Crossing-Fitted Wavelength after Cubic-Spline \n%s'%file, **titleFont)
+plt.xlabel("Position ($\mu$steps)",**axesFont)
+plt.ylabel("Arbitrary Units",**axesFont)
+plt.xticks(**ticksFont)
+plt.yticks(**ticksFont)
 plt.plot(xr, y, 'go', label = 'Inital points')
-plt.plot(xs,cs(xs), label="Cubic_spline N=%i"%N)
-plt.legend()
+plt.plot(xs,cs(xs), label="Cubic-Spline, N=%i"%N)
+plt.legend(prop=font)
+plt.ticklabel_format(useMathText=True)  
 #plt.show()
-
 distance = xs[1:]-xs[:-1]
 
 #step 5 FFT to extract spectra
-
 yf1=spf.fft(cs(xs))
 xf1=spf.fftfreq(len(xs)) # setting the correct x-axis for the fourier transform. Osciallations/step  
 xf1=spf.fftshift(xf1) #shifts to make it easier (google if interested)
@@ -111,15 +126,15 @@ yf1=spf.fftshift(yf1)
 xx1=xf1[int(len(xf1)/2+1):len(xf1)]
 repx1=2*distance.mean()/xx1  
 
-plt.figure("Fully corrected spectrum FFT")
-plt.title('0-crossing analysis\n%s'%file)
+plt.figure("Fully-Corrected spectrum FFT")
+plt.title('Fully-Corrected Spectrum FFT: Zero-Crossing Analysis\n%s'%file, **titleFont)
+plt.xlabel("Position ($\mu$steps)",**axesFont)
+plt.xticks(**ticksFont)
+plt.yticks(**ticksFont)
 #plt.plot(abs(repx0),abs(yf0[int(len(xf0)/2+1):len(xf0)]),label='Original')
 #plt.plot(abs(repx),abs(yf[int(len(xf)/2+1):len(xf)]),label='After shifting and uniformising full mercury')
-plt.plot(abs(repx1),abs(yf1[int(len(xf1)/2+1):len(xf1)]),label='After shifting and cubicspline N=%i full mercury'%(N))
-
-plt.ylabel('Intensity (a.u.)')
-plt.legend()    
+plt.plot(abs(repx1),abs(yf1[int(len(xf1)/2+1):len(xf1)]),label='After Shifting and Cubic-Spline\nN=%i, Full Hg'%(N))
+plt.ylabel('Intensity (a.u.)', **axesFont)
+plt.legend(prop=font)
+plt.ticklabel_format(useMathText=True)  
 plt.show()
-
-
-
