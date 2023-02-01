@@ -32,8 +32,8 @@ if automation:
             results = rd.read_data3(file)
             #print(results[0])
             #carefull!!! change for the correct detector by swapping onew and zero here
-            y2 = np.array(results[0])
-            y1 = np.array(results[1])
+            y1 = np.array(results[0])
+            y2 = np.array(results[1])
             #for now remove the mean, will need to remove the offset with a filter later
             #y1 = y1 - y1.mean()
             #y2 = y2 - y2.mean()
