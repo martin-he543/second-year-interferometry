@@ -1,11 +1,16 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Feb  1 23:07:31 2023
+
+@author: oliversharpe
+"""
 
 import sys
 import read_data_results as rd
 import numpy as np
 import scipy as sp
 import matplotlib.pyplot as plt
-import iminuit as im
 from scipy import signal
 import scipy.fftpack as spf
 import scipy.signal as sps
@@ -21,12 +26,20 @@ lineStyleBold = {'linewidth': 1}
 histStyle =     {'facecolor': 'green', 'alpha': 0.5, 'edgecolor': 'black'}
 font = fnt.FontProperties(family='C059', weight='bold', style='normal', size=8)
 
+"""
+
+make sure the detectors are the right way round
+make sure to put in the right wavelength
+make sure line 89 is the right way round 
+
+"""
+
 #Step 1 get the data and the x position
-file='%s'%(sys.argv[1]) #this is the data
+file="Task12Spec.txt" #this is the data
 results = rd.read_data3(file)
 
 #Step 1.1 - set the reference wavelength. Whatever units you use here will be theunits of your final spectrum
-lam_r = 580/2 # units of nm - factor 2 because there is a crossing every half wavelength
+lam_r = 546/2 # units of nm - factor 2 because there is a crossing every half wavelength
 #print(results[0])
 #carefull!!! change for the correct detector by swapping onew and zero here
 y2 = np.array(results[0])
@@ -34,12 +47,13 @@ y1 = np.array(results[1])
 #for now remove the mean, will need to remove the offset with a filter later
 #y1 = y1 - y1.mean()
 #y2 = y2 - y2.mean()
+
+
 sampling_frequency=50 #frequency, in Hz
 speed_test= 2*0.35
 x = speed_test * np.arange(0, len(y1), 1)/sampling_frequency#position in mm, no need to be accurate here since we will be shifting the dataset anyways
 dist=(speed_test)/(sampling_frequency) # distance between points to be used for uniform sampling
 
-print(len(y1), len(y2), len(x))
 
 #step 2.1 butterworth filter to correct for misaligment (offset)
 filter_order = 2
@@ -66,15 +80,15 @@ for i in range(len(y1)-1):
         extra = -b/a - xa
         crossing_pos.append(x[i]+extra)
 
-plt.figure("Find the crossing points")
-plt.title("Crossing Point Locations",**titleFont)
-plt.plot(x, y1, 'x-', **lineStyle)
-plt.plot(crossing_pos, 0*np.array(crossing_pos), 'ko')
-plt.xlabel("Position ($\mu$steps)",**axesFont)
-plt.ylabel("Arbitrary Units",**axesFont)
-plt.xticks(**ticksFont)
-plt.yticks(**ticksFont)
-plt.ticklabel_format(useMathText=True)  
+# plt.figure("Find the crossing points")
+# plt.title("Crossing Point Locations",**titleFont)
+# plt.plot(x, y1, 'x-', **lineStyle)
+# plt.plot(crossing_pos, 0*np.array(crossing_pos), 'ko')
+# plt.xlabel("Position ($\mu$steps)",**axesFont)
+# plt.ylabel("Arbitrary Units",**axesFont)
+# plt.xticks(**ticksFont)
+# plt.yticks(**ticksFont)
+# plt.ticklabel_format(useMathText=True)  
 #plt.show()
 
 #step 3 shift the points
@@ -99,7 +113,7 @@ x_corr_array = x_corr_array[1:]
 y1 = y2
 #Cubic Spline part
 xr = x_corr_array
-N = 1000000 # these are the number of points that you will resample - try changing this and look how well the resampling follows the data.
+N = 10000000 # these are the number of points that you will resample - try changing this and look how well the resampling follows the data.
 xs = np.linspace(0, x_corr_array[-1], N)
 y = y2[:len(x_corr_array)]
 cs = spi.CubicSpline(xr, y)
@@ -114,7 +128,7 @@ plt.plot(xr, y, 'go', label = 'Inital points')
 plt.plot(xs,cs(xs), label="Cubic-Spline, N=%i"%N)
 plt.legend(prop=font)
 plt.ticklabel_format(useMathText=True)  
-#plt.show()
+plt.show()
 distance = xs[1:]-xs[:-1]
 
 #step 5 FFT to extract spectra
@@ -137,4 +151,5 @@ plt.xlim(0,900)
 plt.ylabel('Intensity (a.u.)', **axesFont)
 plt.legend(prop=font)
 plt.ticklabel_format(useMathText=True)  
+plt.xlim(400,600)
 plt.show()
