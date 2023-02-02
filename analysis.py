@@ -26,7 +26,7 @@ file='%s'%(sys.argv[1]) #this is the data
 results = rd.read_data3(file)
 
 #Step 1.1 - set the reference wavelength. Whatever units you use here will be theunits of your final spectrum
-lam_r = 532/2 # units of nm - factor 2 because there is a crossing every half wavelength
+lam_r = 580/2 # units of nm - factor 2 because there is a crossing every half wavelength
 #print(results[0])
 #carefull!!! change for the correct detector by swapping onew and zero here
 y2 = np.array(results[0])
